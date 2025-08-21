@@ -1,8 +1,10 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
-import { Controller, Get, Query } from '@nestjs/common';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import Redis from 'ioredis';
 
 @Controller()
+@UseInterceptors(CacheInterceptor)
 export class AppController {
   constructor(
     @InjectRedis() private readonly redis:Redis
