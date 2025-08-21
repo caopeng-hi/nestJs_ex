@@ -4,6 +4,7 @@ import { ConfigModule } from './common/config/config.module';
 import { LogsModule } from './common/logs_log/logs.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { CacheModule } from '@nestjs/cache-manager';
+import { MailModule } from './common/mail.module';
 
 
 @Module({
@@ -18,7 +19,8 @@ import { CacheModule } from '@nestjs/cache-manager';
     CacheModule.register({
       ttl: 20, // ms
       isGlobal:true
-    })
+    }),
+    MailModule
   
   ],
   controllers: [AppController],
