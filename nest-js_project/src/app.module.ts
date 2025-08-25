@@ -8,6 +8,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { MailModule } from './common/mail.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Cat, CatSchema } from './user/user.schema';
 
 
 @Module({
@@ -38,7 +40,9 @@ import { User } from './user/user.entity';
         
       }) as TypeOrmModuleOptions,
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
+    MongooseModule.forRoot('mongodb://localhost/nest'),
+    MongooseModule.forFeature([{name:Cat.name, schema:CatSchema}])
   
   ],
   controllers: [AppController],
