@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cat } from './user/user.schema';
 import { Model } from 'mongoose';
+import { UserRepository } from './user/user.repository';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
@@ -16,7 +17,8 @@ export class AppController {
     @InjectRedis() private readonly redis: Redis,
     
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    @InjectModel(Cat.name) private readonly catModule:Model<Cat>
+    @InjectModel(Cat.name) private readonly catModule: Model<Cat>,
+    private readonly userRepository2:UserRepository,
   ) {}
 
   @Get()

@@ -10,6 +10,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { User } from './user/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from './user/user.schema';
+import { UserRepository } from './user/user.repository';
 
 
 @Module({
@@ -27,6 +28,7 @@ import { Cat, CatSchema } from './user/user.schema';
     }),
     MailModule,
     TypeOrmModule.forRootAsync({
+      name:'test1',
       inject:[ConfigService],
       useFactory: (configService:ConfigService) => ({
         type: configService.get('DB_TYPE'),
@@ -40,12 +42,28 @@ import { Cat, CatSchema } from './user/user.schema';
         
       }) as TypeOrmModuleOptions,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forRootAsync({
+      name:'test2',
+      inject:[ConfigService],
+      useFactory: (configService:ConfigService) => ({
+        type: configService.get('DB_TYPE'),
+        host: configService.get('DB_HOST'),
+        port: 3307,
+        username: 'root',
+        password: 'root',
+        database: 'test',
+        entities: [],
+        synchronize: true,
+        
+      }) as TypeOrmModuleOptions,
+    }),
+    TypeOrmModule.forFeature([User],'test1'),
+    TypeOrmModule.forFeature([User],'test2'),
     MongooseModule.forRoot('mongodb://localhost/nest'),
     MongooseModule.forFeature([{name:Cat.name, schema:CatSchema}])
   
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [UserRepository],
 })
 export class AppModule {}
