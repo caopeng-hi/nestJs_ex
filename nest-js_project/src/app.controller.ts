@@ -1,6 +1,6 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get,  Headers, Param, Post, Query, UseInterceptors, Version } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Redis from 'ioredis';
 import { User } from './user/user.entity';
@@ -29,5 +29,22 @@ export class AppController {
     await this.redis.set('token',token ||'caopeng','EX',60)
     
     return 'hello';
+  }
+
+
+  @Post('/my-post')
+  @Version('2')
+  async postHandel(@Query('page') page: string, @Param('id') id: string,
+    @Body() body: any,
+    @Headers('x-tenant-id') xTenantId:any
+  ): Promise<any> {
+    
+     const res = await this.userRepository.find()
+    return {
+      page,
+      id,
+      body,
+      xTenantId
+    }
   }
 }

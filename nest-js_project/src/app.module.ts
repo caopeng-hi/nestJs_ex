@@ -11,6 +11,7 @@ import { User } from './user/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from './user/user.schema';
 import { UserRepository } from './user/user.repository';
+import { AppService } from './app.service';
 
 
 @Module({
@@ -44,11 +45,11 @@ import { UserRepository } from './user/user.repository';
     }),
     TypeOrmModule.forRootAsync({
       name:'test2',
-      inject:[ConfigService],
-      useFactory: (configService:ConfigService) => ({
+      inject:[ConfigService,AppService],
+      useFactory: (configService:ConfigService,appService:AppService) => ({
         type: configService.get('DB_TYPE'),
         host: configService.get('DB_HOST'),
-        port: 3307,
+        port: appService.getDBPort(),
         username: 'root',
         password: 'root',
         database: 'test',
