@@ -1,5 +1,6 @@
 import { Body, Controller, HttpException, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { SignUserDto } from '@/dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -7,20 +8,20 @@ export class AuthController {
         
     }
     @Post('/signin')
-    signin(@Body() dto: any) {
+    signin(@Body() dto: SignUserDto) {
         
-        const {username,oassword } =dto
-        return this.authService.signin(username,oassword )
+        const {username,password } =dto
+        return this.authService.signin(username,password )
     }
 
     @Post('/signup')
-    signup(@Body() dto: any) {
-        const { username, oassword } = dto
+    signup(@Body() dto: SignUserDto) {
+        const { username, password } = dto
         
-        if (!username || !oassword) {
+        if (!username || !password) {
             throw new HttpException('用户名或者密码不能为空',400)
         }
-        return this.authService.signup(username,oassword )
+        return this.authService.signup(username,password )
     }
 
 
