@@ -12,8 +12,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Cat, CatSchema } from './user/user.schema';
 import { UserRepository } from './user/user.repository';
 import { AppService } from './app.service';
+import { TypeormConfigService } from './databse/typeorm/typeorm-config.service';
+import { DataSource } from 'typeorm';
 
-
+const connections =  new Map()
 @Module({
   imports: [ConfigModule, LogsModule,
     RedisModule.forRoot({
@@ -41,22 +43,20 @@ import { AppService } from './app.service';
         entities: [],
         synchronize: true,
         
-      }) as TypeOrmModuleOptions,
+      }) as TypeOrmModuleOptions, 
     }),
     TypeOrmModule.forRootAsync({
-      name:'test2',
-      inject:[ConfigService,AppService],
-      useFactory: (configService:ConfigService,appService:AppService) => ({
-        type: configService.get('DB_TYPE'),
-        host: configService.get('DB_HOST'),
-        port: appService.getDBPort(),
-        username: 'root',
-        password: 'root',
-        database: 'test',
-        entities: [],
-        synchronize: true,
+      useClass: TypeormConfigService,
+      dataSourceFactory: async (options) => {
+        const tenatId = options!['tenatId'] || 'default'
         
-      }) as TypeOrmModuleOptions,
+        if (tenatId && connections.has(tenatId)) {
+          return connections.get(tenatId)
+        }
+        const dataSource = await new DataSource(options!).initialize()
+        connections.set(tenatId,dataSource)
+        return dataSource
+      }
     }),
     TypeOrmModule.forFeature([User],'test1'),
     TypeOrmModule.forFeature([User],'test2'),
@@ -65,6 +65,9 @@ import { AppService } from './app.service';
   
   ],
   controllers: [AppController],
-  providers: [UserRepository],
+  providers: [UserRepository, {
+    provide: 'TYPE_ORM_CONNECTIONS',
+    useValue:connections
+  }],
 })
 export class AppModule {}
