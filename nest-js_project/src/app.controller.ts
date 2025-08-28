@@ -1,6 +1,6 @@
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { CacheInterceptor } from '@nestjs/cache-manager';
-import { Body, Controller, Get,  Headers, Param, Post, Query, UseInterceptors, Version } from '@nestjs/common';
+import { Body, Controller, Get,  Headers, Param, Post, Query, UseGuards, UseInterceptors, Version } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Redis from 'ioredis';
 import { User } from './user/user.entity';
@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cat } from './user/user.schema';
 import { Model } from 'mongoose';
 import { UserRepository } from './user/user.repository';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
@@ -22,6 +23,7 @@ export class AppController {
   ) {}
 
   @Get()
+    @UseGuards(AuthGuard('jwt'))
   async getHello(@Query('token' ) token) {
     const res = await this.redis.get('token')
     console.log(res);

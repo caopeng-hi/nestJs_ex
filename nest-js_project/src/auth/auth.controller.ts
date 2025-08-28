@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, Post } from '@nestjs/common';
+import { Body, Controller, HttpException, ParseArrayPipe, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUserDto } from '@/dto/user.dto';
 
@@ -15,7 +15,7 @@ export class AuthController {
     }
 
     @Post('/signup')
-    signup(@Body() dto: SignUserDto) {
+    signup(@Body(new ParseArrayPipe({items:SignUserDto})) dto: SignUserDto) {
         const { username, password } = dto
         
         if (!username || !password) {

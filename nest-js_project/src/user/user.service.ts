@@ -8,7 +8,7 @@ export class UserService {
     ){}
     find(username: string) {
         //查询数据库
-        this.userRepository.getRepository().find({where:username})
+      return   this.userRepository.getRepository().find({where:username})
     }
 
     create(dto: any) {

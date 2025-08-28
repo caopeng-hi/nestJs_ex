@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsString,Length} from 'class-validator'
+import {IsArray, IsNotEmpty, IsNumber, IsOptional, IsString,Length,} from 'class-validator'
 
 export class SignUserDto { 
 
@@ -12,6 +12,11 @@ export class SignUserDto {
      @IsString()
     @IsNotEmpty()
     @Length(6, 20)
-    password:string
+    password: string
+    
+    @IsArray()
+    @IsOptional()
+    @IsNumber({}, { each: true })
+    roles:[]
 
 }
