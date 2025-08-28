@@ -10,6 +10,7 @@ import { Cat } from './user/user.schema';
 import { Model } from 'mongoose';
 import { UserRepository } from './user/user.repository';
 import { AuthGuard } from '@nestjs/passport';
+import { AdminGuard } from './common/gurads/admin.guard';
 
 @Controller()
 @UseInterceptors(CacheInterceptor)
@@ -48,5 +49,12 @@ export class AppController {
       body,
       xTenantId
     }
+  }
+
+
+  @Get('/test')
+    @UseGuards(AdminGuard)
+  handleTest() {
+    return 'test'
   }
 }
