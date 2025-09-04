@@ -15,7 +15,7 @@ export class SignUserDto {
     password: string
     
     @IsArray()
-    @IsOptional()
+    @IsOptional() 
     @IsNumber({}, { each: true })
     roles:[]
 
