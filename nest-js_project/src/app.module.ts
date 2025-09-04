@@ -15,6 +15,7 @@ import { AppService } from './app.service';
 import { TypeormConfigService } from './databse/typeorm/typeorm-config.service';
 import { DataSource } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
+import { RoleModule } from './role/role.module';
 
 const connections =  new Map()
 @Module({
@@ -63,7 +64,8 @@ const connections =  new Map()
     TypeOrmModule.forFeature([User],'test2'),
     MongooseModule.forRoot('mongodb://localhost/nest'),
     MongooseModule.forFeature([{name:Cat.name, schema:CatSchema}]),
-    AuthModule
+    AuthModule,
+    RoleModule
   
   ],
   controllers: [AppController],
